@@ -4,7 +4,7 @@ import {
     Controller,
     Get,
     NotFoundException,
-    Post,
+    Post, Put,
     Req,
     Res, UseGuards,
     UseInterceptors
@@ -50,7 +50,6 @@ export class AuthController {
         @Res({passthrough:true}) response: Response
     ) {
         const user = await this.userService.findOne({email})
-        console.log(user);
 
         if (!user) {
             throw new NotFoundException("User Not Found");
@@ -92,5 +91,47 @@ export class AuthController {
         return {
             message: "Success"
         };
+    }
+
+    @UseGuards(AuthGuard)
+    @Put('admin/user/info')
+    async updateInfo(
+        @Req() request: Request,
+        @Body('first_name') first_name: string,
+        @Body('last_name') last_name: string,
+        @Body('email') email: string,
+    ){
+        const cookie = request.cookies['jwt'];
+        const {id} =  await this.jwtService.verifyAsync(cookie);
+
+        await this.userService.update(id,{
+            first_name,
+            last_name,
+            email,
+        })
+
+        return this.userService.findOne({id});
+    }
+
+    @UseGuards(AuthGuard)
+    @Put('admin/user/password')
+    async updatePassword(
+        @Req() request: Request,
+        @Body('password') password: string,
+        @Body('password_confirm') password_confirm: string,
+    ){
+
+        if (password !== password_confirm) {
+            throw new BadRequestException("Password not match")
+        }
+
+        const cookie = request.cookies['jwt'];
+        const {id} =  await this.jwtService.verifyAsync(cookie);
+
+        await this.userService.update(id,{
+            password: await bcrypt.hash(password, 12),
+        })
+
+        return this.userService.findOne({id});
     }
 }
