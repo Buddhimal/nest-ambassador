@@ -6,6 +6,7 @@ import { UserModule } from './user/user.module';
 import {User} from "./user/user";
 import { AuthModule } from './auth/auth.module';
 import { ProductModule } from './product/product.module';
+import { OrderModule } from './order/order.module';
 
 @Module({
   imports: [
@@ -16,14 +17,13 @@ import { ProductModule } from './product/product.module';
         username: 'root',
         password: 'root',
         database: 'ambassador',
-        entities: [
-            User
-        ],
         synchronize: true,
+        autoLoadEntities: true,
       }),
       UserModule,
       AuthModule,
-      ProductModule
+      ProductModule,
+      OrderModule
   ],
   controllers: [AppController],
   providers: [AppService],

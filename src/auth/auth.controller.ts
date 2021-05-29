@@ -9,7 +9,7 @@ import {
     Res, UseGuards,
     UseInterceptors
 } from '@nestjs/common';
-import {RegisterDto} from "./dto/register.dto";
+import {RegisterDto} from "./dtos/register.dto";
 import {UserService} from "../user/user.service";
 import * as bcrypt from 'bcryptjs';
 import {JwtService} from "@nestjs/jwt";
