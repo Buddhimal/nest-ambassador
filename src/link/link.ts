@@ -1,6 +1,7 @@
 import {User} from "../user/user";
 import {Product} from "../product/product";
-import {Column, Entity, JoinColumn, JoinTable, ManyToMany, ManyToOne, PrimaryGeneratedColumn} from "typeorm";
+import {Column, Entity, JoinColumn, JoinTable, ManyToMany, ManyToOne, OneToMany, PrimaryGeneratedColumn} from "typeorm";
+import {Order} from "../order/order";
 
 @Entity('links')
 export class Link {
@@ -22,4 +23,13 @@ export class Link {
         inverseJoinColumn: {name: 'product_id', referencedColumnName: 'id'}
     })
     products: Product[];
+
+    @OneToMany(() => Order, order => order.link, {
+        createForeignKeyConstraints: false //this will not create the database FK, only for nestJS
+    })
+    @JoinColumn({
+        referencedColumnName: 'code',
+        name: 'code'
+    })
+    orders: Order[];
 }
