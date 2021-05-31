@@ -1,5 +1,6 @@
-import { Module } from '@nestjs/common';
+import {CacheModule, Module} from '@nestjs/common';
 import {JwtModule} from "@nestjs/jwt";
+import * as redisStore from 'cache-manager-redis-store'
 
 @Module({
     imports:[
@@ -7,6 +8,11 @@ import {JwtModule} from "@nestjs/jwt";
             secret: 'buddhimal',
             signOptions:{expiresIn: '1d'}
         }),
+        CacheModule.register({
+            store: redisStore,
+            host: 'redis',
+            port: 6379,
+        })
     ],
     exports:[JwtModule]
 })
