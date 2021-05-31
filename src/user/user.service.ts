@@ -13,6 +13,10 @@ export class UserService extends AbstractService{
         super(userRepository);
     }
 
+        async findOneRelation(id){
+        return this.userRepository.findOne(id,{relations: ['orders', 'orders.order_items']});
+    }
+
 }
 
 

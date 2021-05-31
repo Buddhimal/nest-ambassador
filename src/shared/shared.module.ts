@@ -3,10 +3,10 @@ import {JwtModule} from "@nestjs/jwt";
 import * as redisStore from 'cache-manager-redis-store'
 
 @Module({
-    imports:[
+    imports: [
         JwtModule.register({
             secret: 'buddhimal',
-            signOptions:{expiresIn: '1d'}
+            signOptions: {expiresIn: '1d'}
         }),
         CacheModule.register({
             store: redisStore,
@@ -14,6 +14,10 @@ import * as redisStore from 'cache-manager-redis-store'
             port: 6379,
         })
     ],
-    exports:[JwtModule]
+    exports: [
+        JwtModule,
+        CacheModule
+    ]
 })
-export class SharedModule {}
+export class SharedModule {
+}

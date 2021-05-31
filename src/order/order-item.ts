@@ -3,7 +3,6 @@ import {Order} from "./order";
 
 @Entity('order_items')
 export class OrderItem {
-
     @PrimaryGeneratedColumn()
     id: number;
 
@@ -22,8 +21,7 @@ export class OrderItem {
     @Column()
     ambassador_revenue: number;
 
-    @ManyToOne(() => Order, order => order.order_item)
+    @ManyToOne(() => Order, order => order.order_items)
     @JoinColumn({name: 'order_id'})
     order: Order;
-
 }
