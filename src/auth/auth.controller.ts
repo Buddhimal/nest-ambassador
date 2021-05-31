@@ -6,7 +6,7 @@ import {
     NotFoundException,
     Post, Put,
     Req,
-    Res, UseGuards,
+    Res, UnauthorizedException, UseGuards,
     UseInterceptors
 } from '@nestjs/common';
 import {RegisterDto} from "./dtos/register.dto";
@@ -50,7 +50,8 @@ export class AuthController {
     async login(
         @Body('email') email: string,
         @Body('password') password: string,
-        @Res({passthrough:true}) response: Response
+        @Res({passthrough:true}) response: Response,
+        @Req() request: Request
     ) {
         const user = await this.userService.findOne({email})
 
@@ -62,8 +63,15 @@ export class AuthController {
             throw new BadRequestException("Invalid Credentials")
         }
 
+        const adminLogin = request.path === '/api/admin/login';
+
+        if (user.is_ambassador && adminLogin){
+            throw new UnauthorizedException();
+        }
+
         const jwt = await this.jwtService.signAsync({
-            id: user.id
+            id: user.id,
+            scope: adminLogin ? 'admin' : 'ambassador'
         })
 
         response.cookie('jwt', jwt, {httpOnly: true});
@@ -81,9 +89,21 @@ export class AuthController {
 
         const {id} = await this.jwtService.verifyAsync(cookie);
 
-        const user = await this.userService.findOne({id});
+        if (request.path === '/api/admin/use'){
+            return await this.userService.findOne({id});
+        }
 
-        return user;
+        const user = await this.userService.findOne({
+            id,
+            relations:['orders','orders.order_item']
+        });
+
+        const {orders, password, ...data} = user;
+
+        return {
+            ...data,
+            revenue: user.revenue
+        }
     }
 
     @UseGuards(AuthGuard)
