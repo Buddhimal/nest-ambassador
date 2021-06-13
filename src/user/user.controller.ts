@@ -1,6 +1,9 @@
-import {ClassSerializerInterceptor, Controller, Get, UseInterceptors} from '@nestjs/common';
+import {ClassSerializerInterceptor, Controller, Get, UseGuards, UseInterceptors} from '@nestjs/common';
 import {UserService} from "./user.service";
+import {AuthGuard} from "../auth/auth.guard";
+import {User} from "./user";
 
+@UseGuards(AuthGuard)
 @Controller()
 @UseInterceptors(ClassSerializerInterceptor)
 export class UserController {
@@ -9,10 +12,26 @@ export class UserController {
     }
 
     @Get('admin/ambassadors')
-    async ambassadors(){
+    async ambassadors() {
         return this.userService.find({
             is_ambassador: true
         });
+    }
+
+
+    @Get('ambassador/rankings')
+    async rankings() {
+        const ambassadors: User[] = await this.userService.find({
+            is_ambassador: true,
+            relations: ['orders', "orders.order_items"]
+        });
+
+        return ambassadors.map(ambassador => {
+            return{
+                name: ambassador.name,
+                revenue: ambassador.revenue
+            }
+        })
     }
 
 }
