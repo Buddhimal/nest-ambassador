@@ -124,7 +124,6 @@ export class ProductController {
             page,
             last_page: Math.ceil(total/perPage)
         };
-
     }
 
 
