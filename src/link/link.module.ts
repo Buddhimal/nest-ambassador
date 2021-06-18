@@ -13,6 +13,7 @@ import {AuthModule} from "../auth/auth.module";
       AuthModule
   ],
   controllers: [LinkController],
-  providers: [LinkService]
+  providers: [LinkService],
+  exports: [LinkService]
 })
 export class LinkModule {}
