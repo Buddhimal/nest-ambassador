@@ -5,7 +5,7 @@ import {RedisService} from "../shared/redis.service";
 import {Response} from "express";
 
 
-@UseGuards(AuthGuard)
+// @UseGuards(AuthGuard)
 @Controller()
 @UseInterceptors(ClassSerializerInterceptor)
 export class UserController {

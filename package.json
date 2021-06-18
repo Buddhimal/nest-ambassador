@@ -25,6 +25,7 @@
     "rankings": "ts-node src/commands/rankings.ts"
   },
   "dependencies": {
+    "@nestjs-modules/mailer": "^1.6.0",
     "@nestjs/common": "^7.6.15",
     "@nestjs/config": "^0.6.3",
     "@nestjs/core": "^7.6.15",
@@ -45,6 +46,7 @@
     "faker": "^5.5.3",
     "mysql2": "^2.2.5",
     "nestjs-stripe": "^0.4.1",
+    "nodemailer": "^6.6.2",
     "passport-jwt": "^4.0.0",
     "redis": "^3.1.2",
     "reflect-metadata": "^0.1.13",
@@ -61,6 +63,7 @@
     "@types/express": "^4.17.11",
     "@types/jest": "^26.0.22",
     "@types/node": "^14.14.36",
+    "@types/nodemailer": "^6.4.2",
     "@types/passport-jwt": "^3.0.5",
     "@types/supertest": "^2.0.10",
     "@typescript-eslint/eslint-plugin": "^4.19.0",
