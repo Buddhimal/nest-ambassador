@@ -27,4 +27,8 @@ export class AbstractService {
         return this.repository.delete(id);
     }
 
+    async findOneRelation(options,relations) {
+        return this.repository.findOne(options, {relations: relations});
+    }
+
 }

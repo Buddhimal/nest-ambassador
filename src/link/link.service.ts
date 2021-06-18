@@ -13,4 +13,8 @@ export class LinkService extends AbstractService{
         super(linkRepository);
     }
 
+    // async findOneRelation(code) {
+    //     return this.linkRepository.findOne(code, {relations: ['user','products']});
+    // }
+
 }

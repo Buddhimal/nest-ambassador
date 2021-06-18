@@ -1,4 +1,14 @@
-import {Body, Controller, Get, Param, Post, Req, UseGuards} from '@nestjs/common';
+import {
+    Body,
+    ClassSerializerInterceptor,
+    Controller,
+    Get,
+    Param,
+    Post,
+    Req,
+    UseGuards,
+    UseInterceptors
+} from '@nestjs/common';
 import {LinkService} from "./link.service";
 import {AuthGuard} from "../auth/auth.guard";
 import {AuthService} from "../auth/auth.service";
@@ -8,6 +18,7 @@ import {Link} from "./link";
 import {Order} from "../order/order";
 
 @Controller()
+@UseInterceptors(ClassSerializerInterceptor)
 export class LinkController {
 
     constructor(
@@ -61,5 +72,17 @@ export class LinkController {
             }
         })
     }
+
+    @Get('checkout/links/:code')
+    async link(
+        @Param('code') code: string
+    ) {
+        return this.linkService.findOneRelation(
+            {
+                code
+            },
+            ['user', 'products'])
+    }
+
 
 }
