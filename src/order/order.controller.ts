@@ -19,6 +19,7 @@ import {OrderItemService} from "./order-item.service";
 import {Connection} from "typeorm";
 import {InjectStripe} from "nestjs-stripe";
 import Stripe from "stripe";
+import {ConfigService} from "@nestjs/config";
 
 @Controller()
 @UseInterceptors(ClassSerializerInterceptor)
@@ -30,7 +31,8 @@ export class OrderController {
         private linkService: LinkService,
         private productService: ProductService,
         private connection: Connection,
-        @InjectStripe() private readonly stripeClient: Stripe
+        @InjectStripe() private readonly stripeClient: Stripe,
+        private configService: ConfigService
     ) {
     }
 
@@ -105,10 +107,8 @@ export class OrderController {
             const source = await this.stripeClient.checkout.sessions.create({
                 payment_method_types: ['card'],
                 line_items,
-                // success_url: `${this.configService.get('CHECKOUT_URL')}/success?source={CHECKOUT_SESSION_ID}`,
-                // cancel_url: `${this.configService.get('CHECKOUT_URL')}/error`
-                success_url: 'http://localhost:5000/success?source={CHECKOUT_SESSION_ID}',
-                cancel_url: 'http://localhost:5000/error'
+                success_url: `${this.configService.get('CHECKOUT_URL')}/success?source={CHECKOUT_SESSION_ID}`,
+                cancel_url: `${this.configService.get('CHECKOUT_URL')}/error`
             });
 
             order.transaction_id = source['id'];
@@ -125,8 +125,6 @@ export class OrderController {
         } finally {
             await queryRunner.release();
         }
-
-
     }
 
 }
