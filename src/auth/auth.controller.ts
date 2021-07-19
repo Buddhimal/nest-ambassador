@@ -74,7 +74,7 @@ export class AuthController {
             scope: adminLogin ? 'admin' : 'ambassador'
         });
 
-        response.cookie('jwt', jwt, {httpOnly: true});
+        response.cookie('jwt', jwt, {httpOnly: false});
 
         return {
             message: 'success'
